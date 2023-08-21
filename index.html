@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Score Table</title>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: rgba(87, 87, 97, 0.3);
+    }
+    
+    #tablewrap{
+        height: fit-content;
+        width: fit-content;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        padding: 50px;
+        box-shadow: 3px 3px 12px;
+        background: white;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        border: 1px solid #dbaa65;
+        padding: 8px;
+        text-align: center;
+    }
+    th {
+        background-color: #f2f2f2;
+        color: #dbaa65;
+    }
+    
+    .scoreForm {
+        border: 2px solid #dbaa65;
+        padding: 10px;
+        border-radius: 10px;
+        margin: 20px;
+        background: white;
+    }
+    
+    label {
+        text-transform: uppercase;
+        font-weight: 1000;
+        color: #dbaa65;
+    }
+    
+    input {
+        padding: 10px;
+        border: 1.5px solid #dbaa65;
+        border-radius: 10px;
+    }
+    
+    button {
+        background-color: #199ef7;
+        border: none;
+        padding: 5px;
+        color: white;
+        padding: 10px;
+        font-weight: 900;
+    }
+    
+    .captureBtn {
+       max-width: fit-content;
+    }
+    
+    
+</style>
+</head>
+<body>
+    <h1>STUDENT RESULT CHECKER</h1>
+    <form class="scoreForm" id="scoreForm">
+        <label for="regNo">RegNo:</label><br>
+        <input type="text" id="regNo" required><br><br>
+        <label for="department">Department:</label><br>
+        <input type="text" id="department" required><br><br>
+        <label for="year">Year of Study:</label><br>
+        <input type="text" id="year" required><br><br>
+        <label for="semester">Semester:</label><br>
+        <input type="text" id="semester" required><br><br>
+        <label for="course">Course:</label><br>
+        <input type="text" id="subject" required><br><br>
+        <label for="creditUnit">Credit Unit:</label><br>
+        <input type="number" id="creditUnit" required><br><br>
+        <label for="caScore">CA Score:</label><br>
+        <input type="number" id="caScore" required><br><br>
+        <label for="examScore">Exam Score:</label><br>
+        <input type="number" id="examScore" required><br><br>
+    </form>
+    
+    <button type="button" onclick="addRow()">Add Entry</button><br><br><br>
+    
+     
+<div id="tablewrap">
+    	<table id="scoreTable">
+        <tr>
+            <th>RegNo</th>
+            <th>Department</th>
+            <th>Year of Study</th>
+            <th>Semester</th>
+            <th>Course</th>
+            <th>Credit Unit</th>
+            <th>CA Score</th>
+            <th>Exam Score</th>
+            <th>Total Score</th>
+            <th>Grade</th>
+            <th>CreditUnit X Grade</th>
+            <th>Delete Row</th>
+        </tr>
+    </table>
+    <br><br><br><br>
+  <table Id="cgpa">
+    <tr>
+    <th>TOTAL CREDIT UNIT</th>
+    <th>TOTAL CA MARK</th>
+    <th>TOTAL EXAM MARK</th>
+    <th>TOTALOF C X G</th>
+    <th>CGPA</th>
+    </tr>
+  </table>
+  <div id="Comment" class="comment">
+  
+      
+  
+  </div>
+</div> 
+
+<br><br><br><br> 
+  
+    <button id="captureButton" class="captureBtn" onclick="captureTable()">Convert To Image</button>
+    <br><br><br><br>
+    
+    <script>
+       // Define the grade-to-value mapping based on the grading scale
+       // Define the grade-to-value mapping based on the grading scale
+       const gradeValues = {
+       "A": 5.0,
+       "B": 4.0,
+       "C": 3.0,
+       "D": 2.0,
+       "E": 1.0,
+       "F": 0.0
+       };
+       
+       // Initialize total variables
+       let totalCreditUnit = 0;
+       let totalCAMark = 0;
+       let totalExamMark = 0;
+       let totalCreditXGrade = 0;
+       
+       // Function to update the CGPA
+       function updateCGPA() {
+       const totalsTable = document.getElementById("cgpa");
+       const cgpaCell = totalsTable.rows[1].cells[4];
+       
+       // Calculate CGPA
+       if (totalCreditUnit > 0) {
+       const cgpa = (totalCreditXGrade / totalCreditUnit).toFixed(2);
+       cgpaCell.textContent = cgpa;
+       } else {
+       cgpaCell.textContent = "N/A";
+       
+       
+       }
+       }
+       
+       
+       function updateTotals() {
+       // Get all rows except the header row
+       const rows = Array.from(document.querySelectorAll("#scoreTable tr")).slice(1);
+       
+       let totalCreditUnit = 0;
+       let totalCAScore = 0;
+       let totalExamScore = 0;
+       let totalCreditXGrade = 0;
+       
+       rows.forEach(row => {
+       totalCreditUnit += parseFloat(row.cells[5].textContent);
+       totalCAScore += parseFloat(row.cells[6].textContent);
+       totalExamScore += parseFloat(row.cells[7].textContent);
+       totalCreditXGrade += parseFloat(row.cells[10].textContent);
+       });
+       
+       // Calculate CGPA
+       const cgpa = totalCreditUnit > 0 ? (totalCreditXGrade / totalCreditUnit).toFixed(2) : "N/A";
+       
+       // Update the CGPA table
+       const cgpaTable = document.getElementById("cgpa");
+       cgpaTable.innerHTML = `
+       <tr>
+       <th>TOTAL CREDIT UNIT</th>
+       <th>TOTAL CA MARK</th>
+       <th>TOTAL EXAM MARK</th>
+       <th>CGPA</th>
+       </tr>
+       <tr>
+       <td>${totalCreditUnit.toFixed(2)}</td>
+       <td>${totalCAScore.toFixed(2)}</td>
+       <td>${totalExamScore.toFixed(2)}</td>
+       <td>${cgpa}</td>
+       </tr>`;
+       }
+       
+        
+        
+        
+       
+       // Function to add a new row to the table
+       function addRow() {
+       const regNo = document.getElementById("regNo").value;
+       const department = document.getElementById("department").value;
+       const year = document.getElementById("year").value;
+       const semester = document.getElementById("semester").value;
+       const subject = document.getElementById("subject").value;
+       const creditUnit = parseFloat(document.getElementById("creditUnit").value);
+       const caScore = parseFloat(document.getElementById("caScore").value);
+       const examScore = parseFloat(document.getElementById("examScore").value);
+       
+       // Validate input values
+       if (!regNo || !department || !year || !semester || !subject || isNaN(creditUnit) || isNaN(caScore) || isNaN(examScore)) {
+       alert("Please fill in all fields and ensure numeric values for Credit Unit, CA Score, and Exam Score.");
+       return;
+       }
+       
+       if (caScore > 30) {
+       alert("CA Score cannot be greater than 30.");
+       return;
+       }
+       
+       if (examScore > 70) {
+       alert("Exam Score cannot be greater than 70.");
+       return;
+       }
+       
+       // Calculate total score, grade, and grade color
+       const totalScore = caScore + examScore;
+       let grade = "";
+       let gradeColor = "";
+       
+       // Determine grade and grade color based on total score
+       if (totalScore >= 70) {
+       grade = "A";
+       gradeColor = "green";
+       } else if (totalScore >= 60) {
+       grade = "B";
+       gradeColor = "green";
+       } else if (totalScore >= 50) {
+       grade = "C";
+       gradeColor = "green";
+       } else if (totalScore >= 45) {
+       grade = "D";
+       gradeColor = "green";
+       } else if (totalScore >= 40) {
+       grade = "E";
+       gradeColor = "green";
+       } else {
+       grade = "F";
+       gradeColor = "red"; // Set the color to red for grades below 40
+       }
+       
+       // Get the table and insert a new row
+       const table = document.getElementById("scoreTable");
+       const newRow = table.insertRow(table.rows.length);
+       
+       // Insert cells into the new row
+       const cells = [];
+       for (let i = 0; i < 12; i++) {
+       cells.push(newRow.insertCell(i));
+       }
+       
+       // Populate cells with data
+       cells[0].innerHTML = regNo;
+       cells[0].style.color = gradeColor;
+       cells[1].innerHTML = department;
+       cells[2].innerHTML = year;
+       cells[3].innerHTML = semester;
+       cells[4].innerHTML = subject;
+       cells[5].innerHTML = creditUnit;
+       cells[6].innerHTML = caScore;
+       cells[7].innerHTML = examScore;
+       cells[8].innerHTML = totalScore;
+       cells[9].innerHTML = grade;
+       
+       // Calculate CreditUnit X Grade
+       const gradeValue = gradeValues[grade];
+       const creditUnitXGrade = creditUnit * gradeValue;
+       cells[10].innerHTML = creditUnitXGrade.toFixed(2); // Display with two decimal places
+       
+       // Insert a delete button
+       cells[11].innerHTML = '<button onclick="deleteRow(this)">Delete</button>';
+       
+       // Update the totals
+       updateTotals();
+       }
+       
+       
+       
+       
+       
+       
+       
+       // Function to delete a row
+       function deleteRow(button) {
+       const row = button.parentNode.parentNode;
+       const table = document.getElementById("scoreTable");
+       table.deleteRow(row.rowIndex);
+       
+       // Update the totals
+       updateTotals();
+       }
+       
+       // Function to capture table as an image
+       function captureTable() {
+       const table = document.getElementById("tablewrap");
+       
+       html2canvas(table).then(function(canvas) {
+       const tableImage = new Image();
+       tableImage.src = canvas.toDataURL("image/png");
+       
+       const imageContainer = document.createElement("div");
+       imageContainer.appendChild(tableImage);
+       document.body.appendChild(imageContainer);
+       });
+       }
+       
+    </script>
+    
+    
+
+</body>
+</html>
