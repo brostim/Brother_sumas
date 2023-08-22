@@ -10,6 +10,25 @@
     body {
         font-family: Arial, sans-serif;
         background: rgba(87, 87, 97, 0.3);
+
+    }
+    
+    .header {
+        height: 7ppx;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        padding: 15px;
+        border-radius: 10px;
+        align-items: center;
+        background-color: #dbaa65;
+        position: fixed;
+        margin-top: -140px;  
+    }
+    
+    .header > h1 {
+        Color: white;
     }
     
     #tablewrap{
@@ -21,7 +40,94 @@
         padding: 50px;
         box-shadow: 3px 3px 12px;
         background: white;
+        align-items: center;
     }
+    
+    .table-head {
+       height: fit-content;
+       width: fit-content;
+       display: flex;
+       justify-content: center;
+       flex-direction: column;
+       padding: 15px;
+       border: 2px solid green;
+       border-radius: 10px;
+       align-items: center;
+       line-height: 0;
+    }
+    
+    .table-head > h1 {
+       color: green;
+    }
+    
+    .table-head > h3 {
+    color: green;
+    }
+    
+    .table-head > h6 {
+    color: green;
+    }
+    
+    
+    
+    @keyframes typewriter {
+    0% {
+    width: 0;
+    height: 0;
+    }
+    100% {
+    width: 70%;
+    height: 100%;
+    }
+    }
+    
+    
+    .explanation {
+    overflow: hidden;
+    }
+    .explanation span {
+    display: block;
+    animation: typewriter 5s steps(50) 1s 1 normal both;
+    border-right: 3px solid #000;
+    white-space: nowrap;
+    color: rgb(119, 76, 13);
+    display: flex;
+    overflow: hidden;
+    }
+    
+    .explanation span:nth-child(1){
+    animation-delay: 0s;
+    }
+    
+    .explanation span:nth-child(2){
+    animation-delay: 5s;
+    }
+    
+    .explanation span:nth-child(3){
+    animation-delay: 10s;
+    }
+    
+    .profile {
+       border: 3px solid green;
+       height: 200px;
+       width: 200px;
+       border-radius: 50%;
+       position: fixed;
+       margin-left: 35%;
+       margin-top: 65%;
+       overflow: hidden;
+    }
+    
+    .profileImage {
+       transform: rotate(4deg);
+       
+    }
+    
+    
+    
+    
+    
+    
     table {
         border-collapse: collapse;
         width: 100%;
@@ -65,16 +171,57 @@
         font-weight: 900;
     }
     
+    .contact {
+        height: fit-content;
+        width: fit-content;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        padding: 5px;
+        box-shadow: 1px 1px 6px green;
+        border-radius: 5px;
+        align-items: center;
+        line-height: 0;
+    }
+    
+    .contact > p {
+       color: green;
+    }
+    
     .captureBtn {
        max-width: fit-content;
     }
     
     
+    
 </style>
 </head>
 <body>
-    <h1>STUDENT RESULT CHECKER</h1>
+
+<br><br><br><br><br><br><br>
+
+<div class="header">
+    <h1>STUDENT RESULT MANIPULATOR/GP CALCULATOR.</h1>
+</div> 
+   
+      <div class="explanation">
+            <span>NOTE: This Site will not take any</span>
+            <span>any information about your result.</span>
+       </div>
+       
+       <div class="profile">
+          <img class="profileImage" width="200" src="https://lh5.googleusercontent.com/MULwCRQIAjdWdLPsTs4MAI9YrPAZV0bSYP1oX1wfv7RkREyesPQwfpvPbxuT3L0LHIQEZCbvAj4ymtYGQQYWslgWQXi-klJq3I9KE5xRXpRY6TWgBv-_LAcfUQHjJ1nsuQ=w1280">
+       </div>
+       
     <form class="scoreForm" id="scoreForm">
+    
+    <label for="schoolName">School Name:</label><br>
+    <input type="text" id="NameOfSchool" ><br><br>
+    
+    <label for="faculty">Faculty:</label><br>
+    <input type="text" id="facultyInput"><br><br>
+    
+    
         <label for="regNo">RegNo:</label><br>
         <input type="text" id="regNo" required><br><br>
         <label for="department">Department:</label><br>
@@ -97,6 +244,14 @@
     
      
 <div id="tablewrap">
+<div class="table-head">
+     <h1 id="school-name"></h1>
+     <h3 id="faculty"></h3>
+     <h6 id="departmentAdd"></h6>
+</div>
+
+<br><br><br>
+
     	<table id="scoreTable">
         <tr>
             <th>RegNo</th>
@@ -128,6 +283,11 @@
       
   
   </div>
+  <br><br>
+<div class="contact">  
+  <p>BROSTIM TECH: <i>07059869061</i></p>
+</div>
+  
 </div> 
 
 <br><br><br><br> 
@@ -296,7 +456,25 @@
        
        // Update the totals
        updateTotals();
+       addHead()
        }
+       
+       
+       function addHead() {
+       const schoolName = document.getElementById("school-name");
+       const facultyName = document.getElementById("faculty");
+       const departmentName = document.getElementById("departmentAdd");
+       
+       const schoolInput = document.getElementById("NameOfSchool").value;
+       const facultyInput = document.getElementById("facultyInput").value;
+       const departmentInput = document.getElementById("department").value;
+       
+       schoolName.innerText = schoolInput.toUpperCase()
+       facultyName.innerText = "FACULTY OF" + facultyInput.toUpperCase()
+       departmentName.innerText = "DEPARTMENT OF" + departmentInput.toUpperCase()
+       
+       }
+       
        
        
        
@@ -333,4 +511,4 @@
     
 
 </body>
-</html>
+    </html>
